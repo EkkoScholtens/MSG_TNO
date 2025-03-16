@@ -1,7 +1,6 @@
-﻿using System.Globalization;
-using System.IO;
-using Microsoft.Data.Analysis;
+﻿using Microsoft.Data.Analysis;
 using MSG_TNO;
+using MSG_TNO.Model;
 
 args = Environment.GetCommandLineArgs();
 if (args.Length < 1)
@@ -19,15 +18,17 @@ if (!File.Exists(filePath)) {
 
 try {
     // Read the CSV file using the DataFrame::LoadCsv method
-    var df = DataFrame.LoadCsv(filePath, separator: ';');
+    var df = DataFrame.LoadCsv(filePath, separator: ';' , header: false);
     // Map the entries from binary to decimal and create a record per row
-    var data = df.Rows.Select(row => new TimeStepData(row.Select(o => Convert.ToInt32(o.ToString(), 2)).ToList()));
+    var data = df.Rows.Select(row => new TimeStepData(row.Select(o => Convert.ToInt32(o.ToString(), 2)).ToList())).ToList();
     
-    var simulator = new Simulator(data);
-    simulator.Run();
+    var simulator = new Simulator(data, new Simulation(0.8, data.Count(), TimeSpan.FromSeconds(1)));
+    await simulator.Run();
+    
+    return 0;
 }
 catch (Exception ex)
 {
     Console.WriteLine($"An error occurred: {ex.Message}");
+    return 3;
 }
-return 0;
