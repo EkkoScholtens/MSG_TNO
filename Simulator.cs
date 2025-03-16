@@ -7,13 +7,13 @@ public class Simulator(List<TimeStepData> data, Simulation simulation) {
     private int _tick;
     private PeriodicTimer _periodicTimer = new(simulation.TickTime);
     private TargetTracker _targetTracker = new();
-    private MissileSystem _missileSystem = new(simulation.Pk);
+    private FiringUnit _firingUnit = new(simulation.Pk);
 
     public async Task Run() {
         _tick = 0;
         _periodicTimer = new PeriodicTimer(simulation.TickTime);
         _targetTracker = new TargetTracker();
-        _missileSystem = new MissileSystem(simulation.Pk);
+        _firingUnit = new FiringUnit(simulation.Pk);
         while (await _periodicTimer.WaitForNextTickAsync() && _tick < simulation.Ticks) {
             DoTimeStep();
             _tick++;
@@ -34,7 +34,7 @@ public class Simulator(List<TimeStepData> data, Simulation simulation) {
         if (target.IsFriendly()) return;
         
         Console.WriteLine($"\t Target is hostile, firing missile...");
-        var missile = _missileSystem.FireMissile(target);
+        var missile = _firingUnit.FireMissile(target);
 
         Console.ForegroundColor = missile.State == MissileState.Missed ? ConsoleColor.Red : ConsoleColor.Green;
 

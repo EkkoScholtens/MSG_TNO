@@ -5,7 +5,7 @@ namespace MSG_TNO.Systems;
 /// <summary>
 /// Represents a missile system launch system.
 /// </summary>
-public class MissileSystem(double pk) {
+public class FiringUnit(double pk) {
     /// <summary>
     /// Fires a missile at the specified target.
     /// </summary>
