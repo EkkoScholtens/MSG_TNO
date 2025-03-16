@@ -20,7 +20,7 @@ try {
     // Read the CSV file using the DataFrame::LoadCsv method
     var df = DataFrame.LoadCsv(filePath, separator: ';' , header: false);
     // Map the entries from binary to decimal and create a record per row
-    var data = df.Rows.Select(row => new TimeStepData(row.Select(o => Convert.ToInt32(o.ToString(), 2)).ToList())).ToList();
+    var data = df.Rows.Select(row => new RadarData(row.Select(o => Convert.ToInt32(o.ToString(), 2)).ToList())).ToList();
     
     var simulator = new Simulator(data, new Simulation(0.8, data.Count(), TimeSpan.FromSeconds(1)));
     await simulator.Run();
